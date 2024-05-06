@@ -4,7 +4,9 @@
   "description": "PostgreSQL CRUD",
   "main": "app.js",
   "scripts": {
-    "dev": "tsnd --respawn --clear src/app.ts"
+    "dev": "tsnd --respawn --clear src/server.ts",
+    "build": "rimraf ./dist && tsc",
+    "start": "node dist/server.js"
   },
   "author": "",
   "license": "ISC",

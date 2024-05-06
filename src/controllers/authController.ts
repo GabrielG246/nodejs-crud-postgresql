@@ -32,12 +32,12 @@ export const register = async(req: Request, res: Response): Promise<void> =>{
         const userReg = await prisma.user.create({
             data: {
                 email: email,
-                pass: hashedPass
+                password: hashedPass,
             }
         })
 
         //Brindar Token post Registro para Logueo automático.
-        const token = generateToken(userReg);
+        const token = generateToken({email: userReg.email, pass: userReg.password});
         res.status(201).json({token})
 
     } catch (error:any) {
@@ -73,14 +73,14 @@ export const login = async(req: Request, res: Response): Promise<void> =>{
             throw new Error('La contraseña es obligatoria')
         }
 
-        const user = await prisma.findUnique({ where: {email: { email }} })
+        const user = await prisma.user.findUnique({ where: {email} })
 
         if(!user){
             res.status(404).json({error: 'Usuario o Contraseña no son válidos'})
             return
         }
 
-        const passMatch= await comparePassword(pass, user.pass)
+        const passMatch= await comparePassword(pass, user.password)
 
         //Validación de Password
         if(!passMatch){
@@ -88,7 +88,7 @@ export const login = async(req: Request, res: Response): Promise<void> =>{
             return
         }
 
-        const token= generateToken(user);
+        const token= generateToken({email: user.email, pass: user.password});
         res.status(200).json({token})
 
     } catch (error) {

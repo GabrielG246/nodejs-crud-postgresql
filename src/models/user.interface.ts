@@ -1,6 +1,6 @@
 //Interface de Usuario
 export interface IUser {
-    id: number;
+    id?: number;
     email: string;
     pass: string;
 }
